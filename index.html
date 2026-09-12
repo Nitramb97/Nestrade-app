@@ -5,82 +5,177 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NESTRADE Trading App</title>
 
-  <!-- Logo para iPhone (Safari) -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/YCWWHBbC/Icono-ecosistema-150x150.png">
+  <!-- Iconos para instalación móvil con Logo oficial -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./logo.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="NESTRADE">
-
-  <!-- Logo para Navegadores -->
-  <link rel="icon" type="image/png" sizes="192x192" href="https://i.postimg.cc/YCWWHBbC/Icono-ecosistema-150x150.png">
-  <link rel="shortcut icon" href="https://i.postimg.cc/YCWWHBbC/Icono-ecosistema-150x150.png">
-
-  <!-- Manifiesto PWA para Android -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./logo.png">
+  <link rel="shortcut icon" href="./logo.png">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1a73e8">
 
   <style>
     body {
-      font-family: 'Google Sans', -apple-system, sans-serif;
+      font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #202124;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .setup-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f8f9fa;
-      color: #202124;
+      padding: 24px;
       text-align: center;
-      padding: 20px;
+      height: 100%;
       box-sizing: border-box;
     }
     .logo {
-      width: 90px;
-      height: 90px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     h2 {
-      margin: 0 0 8px 0;
+      margin: 0 0 6px 0;
       font-size: 20px;
       color: #1a73e8;
     }
     p {
       font-size: 13px;
       color: #5f6368;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+      line-height: 1.4;
     }
-    .btn {
+    input {
+      width: 100%;
+      max-width: 320px;
+      padding: 10px 12px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      font-size: 13px;
+      box-sizing: border-box;
+      margin-bottom: 14px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+    }
+    .btn-connect {
+      width: 100%;
+      max-width: 320px;
       background-color: #1a73e8;
-      color: white;
-      text-decoration: none;
-      padding: 12px 28px;
-      border-radius: 24px;
-      font-weight: 600;
+      color: #ffffff;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-weight: 700;
       font-size: 14px;
-      box-shadow: 0 2px 6px rgba(26,115,232,0.3);
-      display: inline-block;
+      cursor: pointer;
     }
     .hint {
-      margin-top: 20px;
+      margin-top: 14px;
       font-size: 11px;
       color: #80868b;
+      max-width: 320px;
+      line-height: 1.4;
+    }
+    #appFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+    }
+    .top-bar {
+      display: none;
+      background: #ffffff;
+      border-bottom: 1px solid #dadce0;
+      padding: 6px 12px;
+      justify-content: flex-end;
+    }
+    .btn-change-sheet {
+      background: none;
+      border: none;
+      color: #5f6368;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <img src="https://i.postimg.cc/YCWWHBbC/Icono-ecosistema-150x150.png" alt="NESTRADE Logo" class="logo">
-  <h2>NESTRADE Trading App</h2>
-  <p>Cargando plataforma operativa...</p>
-  <a id="btnEntrar" class="btn" href="https://script.google.com/macros/s/AKfycbz7hOH1R0JsDe03f7N0JzlV7zyDW8JOgzwto_FBKKJjqNTvkyfs7SjWYJnnneaopftT/exec">Abrir App</a>
-  <div class="hint">📌 Agrega o instala esta página al inicio para conservar el logo en tu pantalla.</div>
+
+  <!-- Barra superior para cambiar de hoja si se requiere -->
+  <div id="topBar" class="top-bar">
+    <button class="btn-change-sheet" onclick="cambiarHoja()">⚙️ Cambiar Hoja</button>
+  </div>
+
+  <!-- Pantalla de Configuración Inicial -->
+  <div id="setupView" class="setup-container">
+    <img src="./logo.png" alt="NESTRADE" class="logo">
+    <h2>NESTRADE Trading App</h2>
+    <p>Vincula tu copia de Google Sheets para registrar tus operaciones de forma privada.</p>
+    
+    <input type="text" id="sheetInput" placeholder="Pega el enlace o ID de tu hoja">
+    <button class="btn-connect" onclick="guardarYConectar()">Vincular y Entrar</button>
+    
+    <div class="hint">
+      💡 Solo necesitas pegarlo una vez. Si eres el administrador y dejas el campo vacío, se usará la hoja principal.
+    </div>
+  </div>
+
+  <!-- Iframe de la App -->
+  <iframe id="appFrame" allow="clipboard-read; clipboard-write"></iframe>
 
   <script>
-    // Redirección suave automática si ya está instalada o tras 1.5s
-    setTimeout(function() {
-      window.location.href = "https://script.google.com/macros/s/AKfycbz7hOH1R0JsDe03f7N0JzlV7zyDW8JOgzwto_FBKKJjqNTvkyfs7SjWYJnnneaopftT/exec";
-    }, 1200);
+    const SCRIPT_BASE_URL = "https://script.google.com/macros/s/AKfycbz7hOH1R0JsDe03f7N0JzlV7zyDW8JOgzwto_FBKKJjqNTvkyfs7SjWYJnnneaopftT/exec";
+
+    function extraerId(urlOId) {
+      if (!urlOId) return "";
+      const match = urlOId.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      return match ? match[1] : urlOId.trim();
+    }
+
+    function cargarApp(idSpreadsheet) {
+      document.getElementById('setupView').style.display = 'none';
+      document.getElementById('topBar').style.display = 'flex';
+      
+      const frame = document.getElementById('appFrame');
+      const urlFinal = idSpreadsheet ? `${SCRIPT_BASE_URL}?id=${encodeURIComponent(idSpreadsheet)}` : SCRIPT_BASE_URL;
+      frame.src = urlFinal;
+      frame.style.display = 'block';
+    }
+
+    function guardarYConectar() {
+      const rawInput = document.getElementById('sheetInput').value;
+      const sheetId = extraerId(rawInput);
+      
+      localStorage.setItem('nestrade_sheet_id', sheetId);
+      cargarApp(sheetId);
+    }
+
+    function cambiarHoja() {
+      localStorage.removeItem('nestrade_sheet_id');
+      document.getElementById('appFrame').style.display = 'none';
+      document.getElementById('topBar').style.display = 'none';
+      document.getElementById('setupView').style.display = 'flex';
+    }
+
+    // Al iniciar, verificar si ya tiene una hoja guardada
+    window.onload = function() {
+      const savedId = localStorage.getItem('nestrade_sheet_id');
+      if (savedId !== null) {
+        cargarApp(savedId);
+      }
+    };
   </script>
 </body>
 </html>
